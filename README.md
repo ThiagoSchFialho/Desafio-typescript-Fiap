@@ -34,7 +34,7 @@ Para usar este sistema, você pode clonar este repositório e seguir as instruç
 
 
 3. Configure as variáveis de ambiente:
-   - Renomeie o arquivo `env.example.js` para `env.js`.
+   - Crie o arquivo `env.js`.
    - Preencha as variáveis `supabaseUrl` e `supabaseKey` com as informações do seu banco de dados Supabase.
 
 ## Endpoints da API

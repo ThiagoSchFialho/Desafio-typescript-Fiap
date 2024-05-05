@@ -9,7 +9,6 @@ Este é um sistema simples de gerenciamento de livros desenvolvido em HTML, CSS,
 3. Instalação
 4. Endpoints da API
 5. Executando o Servidor
-6. Licença
 
 ## Instruções de Uso
 

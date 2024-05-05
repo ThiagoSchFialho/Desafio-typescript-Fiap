@@ -1,0 +1,19 @@
+@import url('./reset.css');
+@import url('./header.css');
+@import url('./footer.css');
+@import url('./main.css');
+@import url('./formulario.css');
+
+:root {
+    --cor-primaria: #5c80bc;
+    --cor-secundaria: #e8c547;
+    --cor-escura1: #44464F;
+    --cor-escura2: #30323d;
+    --cor-clara1: #cdd1c4;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

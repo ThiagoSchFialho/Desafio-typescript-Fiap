@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/style.css">
+    <title>Biblioteca</title>
+</head>
+<body onload="fillForm()">
+    <header>
+        <h1 class="titulo-cabecalho">Biblioteca</h1>
+        <nav class="crud-container">
+            <ul class="crud">
+                <li class="crud-itens">
+                    <a href="index.html">Livros</a>
+                </li>
+                <li class="crud-itens">
+                    <a href="addLivro.html">Adicionar livro</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+      <h2 class="titulo-conteudo">Adicionar livro</h2>
+
+      <form id="updateLivroForm">
+        <div class="formulario-campo">
+          <label for="titulo">Titulo Do Livro:</label>
+          <input type="text" name="titulo" id="titulo" required>
+        </div>
+      
+        <div class="formulario-campo">
+          <label for="autor">Autor Do Livro:</label>
+          <input type="text" name="autor" id="autor" required>
+        </div>
+      
+        <div class="formulario-campo">
+          <label for="isbn">ISBN:</label>
+          <input type="number" name="isbn" id="isbn" required>
+        </div>
+        
+        <div class="formulario-campo">
+          <label for="anoPublicacao">Ano De Publicação:</label>
+          <input type="number" min="1800" max="2024" step="1" name="anoPublicacao" id="anoPublicacao" required/>
+        </div>
+      
+        <button>Atualizar</button>
+      </form>
+    </main>
+    <footer>
+        <h2>Desenvolvido por <strong>Thiago Scheffer Fialho</strong> para estudo.</h2>
+    </footer>
+
+    <script>
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+      }
+
+      async function fillForm() {
+        const id = getParameterByName('id');
+        if (id) {
+          try {
+            const response = await fetch(`http://127.0.0.1:3000/livros/${id}`);
+            const data = await response.json();
+
+            const livro = data[0];
+
+            console.log(livro)
+
+            document.getElementById("titulo").value = livro.titulo;
+            document.getElementById("autor").value = livro.autor;
+            document.getElementById("isbn").value = livro.isbn;
+            document.getElementById("anoPublicacao").value = livro.ano_publicacao;
+
+          } catch (error) {
+            console.error('Erro ao buscar livro:', error.message);
+          }
+        }
+      }
+
+      document.getElementById("updateLivroForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const titulo = formData.get("titulo");
+        const autor = formData.get("autor");
+        const isbn = formData.get("isbn");
+        const ano_publicacao = formData.get("anoPublicacao");
+        const id = getParameterByName('id');
+
+        try {
+          const response = await fetch(`http://127.0.0.1:3000/livros/${id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ titulo, autor, isbn, ano_publicacao })
+            });
+
+          if (!response.ok) {
+            throw new Error('Erro ao atualizar livro');
+          }
+
+          alert('Livro atualizado com sucesso!');
+          form.reset();
+          location.href = './index.html';
+
+        } catch (error) {
+          console.error('Erro ao atualizar livro:', error.message);
+          alert('Erro ao atualizar livro. Por favor, tente novamente.');
+        }
+      });
+      </script>
+    
+    <script src="../src/index.js"></script>
+</body>
+</html>

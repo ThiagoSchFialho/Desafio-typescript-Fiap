@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/style.css">
+    <title>Biblioteca</title>
+</head>
+<body onload="renderList()">
+    <header>
+        <h1 class="titulo-cabecalho">Biblioteca</h1>
+        <nav class="crud-container">
+            <ul class="crud">
+                <li class="crud-itens">
+                    <a href="index.html">Livros</a>
+                </li>
+                <li class="crud-itens">
+                    <a href="addLivro.html">Adicionar livro</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2 class="titulo-conteudo">Lista de livros</h2>
+        <ul id="listaLivros"></ul>
+    </main>
+    <footer>
+        <h2>Desenvolvido por <strong>Thiago Scheffer Fialho</strong> para estudo.</h2>
+    </footer>
+
+    <script src="../src/index.js"></script>
+    <script>
+        async function renderList (){
+          try {
+            const response = await fetch('http://127.0.0.1:3000/livros'); // Envia uma solicitação GET para a rota /livros
+            const data = await response.json(); // Converte a resposta em JSON
+    
+            // Limpa a lista de livros antes de adicionar os novos
+            const listaLivros = document.getElementById('listaLivros');
+            listaLivros.innerHTML = '';
+
+            // Usando template literals para criar elementos HTML
+            function criarElementosLivro(livro) {
+                return `
+                    <li id="livro${livro.id}">
+                        <div class="li-content-container">
+                            <div class="li-content">
+                                <p>${livro.id}.</p>
+                                <p>${livro.titulo}</p>
+                                <p>-</p>
+                                <p>${livro.autor}</p>
+                                <p>-</p>
+                                <p>${livro.ano_publicacao}</p>
+                            </div>
+                            <div class="li-content-buttons">
+                                <button onclick="goToUpdateLivro(${livro.id})" class="update-button">Editar</button>
+                                <button onclick="deleteLivro(${livro.id})" class="delete-button">Remover</button>
+                            </div>
+                        </div>
+                    </li>
+                `;
+            }
+    
+            // Adiciona os livros à lista na página
+            data.forEach(livro => {
+                listaLivros.innerHTML += criarElementosLivro(livro);
+            });
+    
+          } catch (error) {
+            console.error('Erro ao buscar livros:', error.message);
+          }
+        };
+
+        function goToUpdateLivro(id) {
+            location.href = `./updateLivro.html?id=${id}`;
+        }
+
+        async function deleteLivro(id) {
+            try {
+                await fetch(`http://127.0.0.1:3000/livros/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    }
+                });
+
+                alert('Livro exluido com sucesso');
+                location.reload();
+
+            } catch (error) {
+            console.error('Erro ao remover livro:', error.message);
+          }
+        }
+      </script>
+</body>
+</html>

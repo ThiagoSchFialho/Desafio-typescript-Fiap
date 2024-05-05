@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/style.css">
+    <title>Biblioteca</title>
+</head>
+<body>
+    <header>
+        <h1 class="titulo-cabecalho">Biblioteca</h1>
+        <nav class="crud-container">
+            <ul class="crud">
+                <li class="crud-itens">
+                    <a href="index.html">Livros</a>
+                </li>
+                <li class="crud-itens">
+                    <a href="addLivro.html">Adicionar livro</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+      <h2 class="titulo-conteudo">Adicionar livro</h2>
+
+      <form id="livroForm">
+        <div class="formulario-campo">
+          <label for="titulo">Titulo Do Livro:</label>
+          <input type="text" name="titulo" id="titulo" required>
+        </div>
+      
+        <div class="formulario-campo">
+          <label for="autor">Autor Do Livro:</label>
+          <input type="text" name="autor" id="autor" required>
+        </div>
+      
+        <div class="formulario-campo">
+          <label for="isbn">ISBN:</label>
+          <input type="number" name="isbn" id="isbn" required>
+        </div>
+        
+        <div class="formulario-campo">
+          <label for="anoPublicacao">Ano De Publicação:</label>
+          <input type="number" min="1800" max="2024" step="1" name="anoPublicacao" id="anoPublicacao" required/>
+        </div>
+      
+        <button>Adicionar</button>
+      </form>
+    </main>
+    <footer>
+        <h2>Desenvolvido por <strong>Thiago Scheffer Fialho</strong> para estudo.</h2>
+    </footer>
+
+    <script>
+      document.getElementById("livroForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const titulo = formData.get("titulo");
+        const autor = formData.get("autor");
+        const isbn = formData.get("isbn");
+        const ano_publicacao = formData.get("anoPublicacao");
+
+        try {
+          const response = await fetch('http://127.0.0.1:3000/livros', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ titulo, autor, isbn, ano_publicacao })
+            });
+
+          if (!response.ok) {
+            throw new Error('Erro ao adicionar livro');
+          }
+
+          alert('Livro adicionado com sucesso!');
+          form.reset();
+          location.href = './index.html';
+
+        } catch (error) {
+          console.error('Erro ao adicionar livro:', error.message);
+          alert('Erro ao adicionar livro. Por favor, tente novamente.');
+        }
+      });
+      </script>
+    
+    <script src="../src/index.js"></script>
+</body>
+</html>
